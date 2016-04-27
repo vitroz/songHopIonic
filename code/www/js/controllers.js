@@ -4,7 +4,7 @@ angular.module('songhop.controllers', ['ionic', 'songhop.services'])
 /*
 Controller for the discover page
 */
-.controller('DiscoverCtrl', function($scope, $timeout) {
+.controller('DiscoverCtrl', function($scope, $timeout, User) {
 	// our first three songs
   $scope.songs = [
      {
@@ -32,6 +32,8 @@ Controller for the discover page
    // Disparado quando os botões de skip ou favorite são pressionados
    $scope.sendFeedback = function (bool) {
 
+   	if (bool) User.addSongsToFavorites($scope.currentSong);
+
    	$scope.currentSong.rated = bool;
     $scope.currentSong.hide = true;
 
@@ -52,7 +54,15 @@ Controller for the discover page
 /*
 Controller for the favorites page
 */
-.controller('FavoritesCtrl', function($scope) {
+.controller('FavoritesCtrl', function($scope, User) {
+
+	$scope.favorites = User.favorites;
+	/*You could just write $scope.removeSong = User.removeSongFromFavorites, 
+	but if we ever want to have a success message or perform other scope related activities 
+	when a song is removed, we need to do it this way.*/
+	$scope.removeSong = function(song, index){
+		User.removeSongFromFavorites(song, index);
+	}
 
 })
 
